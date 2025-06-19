@@ -2,6 +2,30 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from typing import Dict, List
+from snowflake.snowpark import Session
+
+# Snowflake connection
+def create_session():
+    return Session.builder.configs({
+        "account": st.secrets["account"],
+        "user": st.secrets["user"],
+        "password": st.secrets["password"],
+        "warehouse": st.secrets["warehouse"],
+        "database": st.secrets["database"],
+        "schema": st.secrets["schema"]
+    }).create()
+
+# Main app with Snowflake integration
+def main():
+    st.title("African Companies Financial Estimator (Snowflake)")
+    
+    # Initialize session
+    session = create_session()
+    
+    # Load data from Snowflake
+    @st.cache_data
+    def load_data():
+        return session.table("COMPANIES").to_pandas()
 
 # Set page config
 st.set_page_config(
@@ -321,3 +345,6 @@ with tab3:
 # Footer
 st.markdown("---")
 st.caption("African Companies Financial Estimator v1.0 | Market-Size Methodology")
+
+if __name__ == "__main__":
+    main()

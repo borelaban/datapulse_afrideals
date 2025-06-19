@@ -1,0 +1,5 @@
+manifest_version: 1
+version: 1.0
+default_streamlit: app.py
+runtime_version: 3.8
+pip_requirements: requirements.txt
